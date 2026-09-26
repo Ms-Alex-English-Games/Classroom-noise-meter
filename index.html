@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="el">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -8,195 +8,176 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Cinzel:wght@600;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
+  :root {
     --font-ui: 'Quicksand', sans-serif;
-    --shelf: #8b5a2b;
     --bg: linear-gradient(180deg,#cdeffd,#fff6d6);
     --panel: #ffffffee;
-    --text:#2c3e50;
-    --accent:#ff8fab;
-    --accent2:#4fc3a1;
-    --btn:#ffd166;
-    --btnText:#5b3a00;
-    --title-font:'Baloo 2', sans-serif;
-    --radius:24px;
+    --text: #2c3e50;
+    --accent: #ff8fab;
+    --accent2: #4fc3a1;
+    --btn: #ffd166;
+    --btnText: #5b3a00;
+    --title-font: 'Baloo 2', sans-serif;
+    --radius: 24px;
   }
-  *{box-sizing:border-box;}
-  html,body{height:100%;margin:0;}
-  body{
-    font-family:var(--font-ui);
-    background:var(--bg);
-    color:var(--text);
-    min-height:100%;
-    padding-top:env(safe-area-inset-top,0px);
-    padding-bottom:env(safe-area-inset-bottom,0px);
-    transition:background .5s ease,color .5s ease;
-    overflow-x:hidden;
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: var(--font-ui);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100%;
+    padding: 16px 10px;
+    transition: background .5s ease, color .5s ease;
+    overflow-x: hidden;
   }
 
-  [data-theme="young"]{
+  [data-theme="young"] {
     --bg: linear-gradient(180deg,#cdeffd,#fff6d6);
     --panel: #ffffffee;
-    --text:#2c3e50;
-    --accent:#ff8fab;
-    --accent2:#4fc3a1;
-    --btn:#ffd166;
-    --btnText:#5b3a00;
-    --title-font:'Baloo 2', sans-serif;
-    --radius:24px;
+    --text: #2c3e50;
+    --accent: #ff8fab;
+    --accent2: #4fc3a1;
+    --btn: #ffd166;
+    --btnText: #5b3a00;
+    --title-font: 'Baloo 2', sans-serif;
+    --radius: 24px;
   }
-  [data-theme="preteen"]{
+  [data-theme="preteen"] {
     --bg: radial-gradient(circle at 50% 0%, #1e1133, #090412 80%);
-    --panel:#190e2edd;
-    --text:#efe6ff;
-    --accent:#c9a4ff;
-    --accent2:#ffb347;
-    --btn:#5b3fa3;
-    --btnText:#f4e8ff;
-    --title-font:'Cinzel', serif;
-    --radius:16px;
+    --panel: #190e2edd;
+    --text: #efe6ff;
+    --accent: #c9a4ff;
+    --accent2: #ffb347;
+    --btn: #5b3fa3;
+    --btnText: #f4e8ff;
+    --title-font: 'Cinzel', serif;
+    --radius: 16px;
   }
 
-  #app{max-width:780px;margin:0 auto;padding:16px 14px 30px;}
-  h1{
-    font-family:var(--title-font);
-    text-align:center;
-    font-size:clamp(1.4rem,4.5vw,2.2rem);
-    margin:4px 0 2px;
+  #app { max-width: 780px; margin: 0 auto; }
+  h1 {
+    font-family: var(--title-font);
+    text-align: center;
+    font-size: clamp(1.4rem, 4.5vw, 2.2rem);
+    margin: 4px 0 2px;
   }
-  .sub{text-align:center;opacity:.8;font-size:.85rem;margin-bottom:12px;}
+  .sub { text-align: center; opacity: .85; font-size: .85rem; margin-bottom: 12px; }
 
-  .row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px 0;}
-  .card{
-    background:var(--panel);
-    border-radius:var(--radius);
-    padding:14px;
-    box-shadow:0 6px 20px rgba(0,0,0,.2);
+  .row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 10px 0; }
+  .card {
+    background: var(--panel);
+    border-radius: var(--radius);
+    padding: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.2);
     backdrop-filter: blur(8px);
-    margin-bottom:12px;
+    margin-bottom: 12px;
   }
-  button{
-    font-family:var(--font-ui);
-    font-weight:700;
-    border:none;
-    cursor:pointer;
-    border-radius:999px;
-    padding:10px 18px;
-    background:var(--btn);
-    color:var(--btnText);
-    font-size:.95rem;
-    transition:transform .12s ease, filter .12s ease;
+  button {
+    font-family: var(--font-ui);
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: 10px 18px;
+    background: var(--btn);
+    color: var(--btnText);
+    font-size: .95rem;
+    transition: transform .12s ease, filter .12s ease;
   }
-  button:hover{filter:brightness(1.08);}
-  button:active{transform:scale(.94);}
-  button.ghost{background:transparent;border:2px solid var(--accent);color:var(--text);}
-  button.selected{outline:3px solid var(--accent2); font-weight:800;}
+  button:hover { filter: brightness(1.08); }
+  button:active { transform: scale(.94); }
+  button.ghost { background: transparent; border: 2px solid var(--accent); color: var(--text); }
+  button.selected { outline: 3px solid var(--accent2); font-weight: 800; }
 
-  #themeRow button{min-width:140px;}
+  #themeRow button { min-width: 140px; }
 
-  #timerDisplay{
-    font-family:var(--title-font);
-    text-align:center;
-    font-size:clamp(2.6rem,9vw,3.8rem);
-    margin:2px 0;
-    letter-spacing:2px;
+  #timerDisplay {
+    font-family: var(--title-font);
+    text-align: center;
+    font-size: clamp(2.6rem, 9vw, 3.8rem);
+    margin: 2px 0;
+    letter-spacing: 2px;
   }
-  #timerLabel{text-align:center;opacity:.85;font-size:.88rem;min-height:1.2em;}
+  #timerLabel { text-align: center; opacity: .85; font-size: .88rem; min-height: 1.2em; }
 
-  #scene{
-    position:relative;
-    width:100%;
-    height:340px;
-    border-radius:var(--radius);
-    overflow:hidden;
-    background:rgba(0,0,0,0.25);
-    margin:10px 0;
+  #scene {
+    position: relative;
+    width: 100%;
+    height: 340px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: rgba(0,0,0,0.25);
+    margin: 10px 0;
     border: 1px solid rgba(255,255,255,0.1);
   }
-  .scenePane{position:absolute;inset:0;display:none;align-items:center;justify-content:center;}
-  .scenePane.active{display:flex !important;}
+  .scenePane { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; }
+  .scenePane.active { display: flex !important; }
 
-  /* --- YOUNG THEME --- */
-  #sunWrap{position:relative;width:210px;height:210px;}
-  #sunRays{
-    position:absolute;inset:-25px;border-radius:50%;
-    background:conic-gradient(#ffd166 0 15deg, transparent 15deg 30deg);
-    transform-origin:center;animation:spin 22s linear infinite;opacity:.75;
+  /* YOUNG THEME */
+  #sunWrap { position: relative; width: 210px; height: 210px; }
+  #sunRays {
+    position: absolute; inset: -25px; border-radius: 50%;
+    background: conic-gradient(#ffd166 0 15deg, transparent 15deg 30deg);
+    transform-origin: center; animation: spin 22s linear infinite; opacity: .75;
   }
-  @keyframes spin{to{transform:rotate(360deg);}}
-  #sunFace{
-    position:absolute;inset:0;border-radius:50%;background:#ffcf56;
-    box-shadow:inset 0 -10px 0 rgba(0,0,0,.08);
-    display:flex;align-items:center;justify-content:center;
-    transition:background .3s ease, transform .2s ease;
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #sunFace {
+    position: absolute; inset: 0; border-radius: 50%; background: #ffcf56;
+    box-shadow: inset 0 -10px 0 rgba(0,0,0,.08);
+    display: flex; align-items: center; justify-content: center;
+    transition: background .3s ease, transform .2s ease;
   }
-  #sunFace.shake{animation:shake .15s ease-in-out infinite;}
-  @keyframes shake{0%,100%{transform:translate(0,0);}25%{transform:translate(-3px,2px);}75%{transform:translate(3px,-2px);}}
-  #sunFace svg{width:80%;height:80%;}
-  #volWord{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-weight:800;font-size:1rem;color:var(--text);}
+  #sunFace.shake { animation: shake .15s ease-in-out infinite; }
+  @keyframes shake { 0%,100%{transform:translate(0,0);} 25%{transform:translate(-3px,2px);} 75%{transform:translate(3px,-2px);} }
+  #sunFace svg { width: 80%; height: 80%; }
+  #volWord { position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; font-weight: 800; font-size: 1rem; color: var(--text); }
   
-  .steam{position:absolute;top:-10px;width:12px;height:12px;background:rgba(255,255,255,0.7);border-radius:50%;opacity:0;}
-  .steam.left{left:40px;} .steam.right{right:40px;}
-  .steam.puff{animation:steamUp 0.8s ease-out infinite;}
-  @keyframes steamUp{0%{opacity:0.8;transform:translateY(0) scale(0.8);}100%{opacity:0;transform:translateY(-30px) scale(1.8);}}
+  .steam { position: absolute; top: -10px; width: 12px; height: 12px; background: rgba(255,255,255,0.7); border-radius: 50%; opacity: 0; }
+  .steam.left { left: 40px; } .steam.right { right: 40px; }
+  .steam.puff { animation: steamUp 0.8s ease-out infinite; }
+  @keyframes steamUp { 0%{opacity:0.8;transform:translateY(0) scale(0.8);} 100%{opacity:0;transform:translateY(-30px) scale(1.8);} }
 
-  /* --- PRETEEN THEME --- */
-  #shelf3D{
-    position:absolute;top:80px;left:20px;right:20px;height:16px;
-    background:#5c3a21;
-    border-top:3px solid #8b5a2b;
-    border-bottom:4px solid #3a2211;
-    box-shadow: 0 8px 12px rgba(0,0,0,0.6);
-    z-index:2;
+  /* PRETEEN THEME */
+  #shelf3D {
+    position: absolute; top: 80px; left: 20px; right: 20px; height: 16px;
+    background: #5c3a21; border-top: 3px solid #8b5a2b; border-bottom: 4px solid #3a2211;
+    box-shadow: 0 8px 12px rgba(0,0,0,0.6); z-index: 2;
+  }
+  #booksContainer { position: absolute; top: 10px; left: 25px; right: 25px; height: 70px; z-index: 3; }
+  .mcBook {
+    position: absolute; bottom: 0; width: 30px; height: 65px; transform-origin: bottom center;
+    transition: left 0.1s linear, transform 0.2s ease;
+  }
+  .mcBook .bookClosed { width: 100%; height: 100%; display: block; }
+  .mcBook .bookOpen { width: 65px; height: 50px; display: none; position: absolute; bottom: -5px; left: -15px; }
+  .mcBook.fallen .bookClosed { display: none; }
+  .mcBook.fallen .bookOpen { display: block; }
+  .mcBook.wobble { animation: bookWobble 0.2s ease-in-out infinite alternate; }
+  @keyframes bookWobble { 0% { transform: rotate(-4deg); } 100% { transform: rotate(4deg); } }
+
+  #dragonSceneContainer { position: absolute; bottom: 0; left: 0; right: 0; height: 240px; display: flex; justify-content: center; align-items: flex-end; }
+  .zzzText {
+    position: absolute; top: 40px; right: 140px; font-family: 'Cinzel', serif; font-weight: 800;
+    font-size: 1.4rem; color: #c9a4ff; opacity: 0; animation: zzzFloat 3s infinite ease-in-out;
+  }
+  @keyframes zzzFloat {
+    0% { opacity: 0; transform: translate(0,0) scale(0.7); }
+    50% { opacity: 0.8; }
+    100% { opacity: 0; transform: translate(-15px,-30px) scale(1.2); }
   }
 
-  #booksContainer{position:absolute;top:10px;left:25px;right:25px;height:70px;z-index:3;}
-  
-  .mcBook{
-    position:absolute;bottom:0;width:30px;height:65px;
-    transform-origin: bottom center;
-    transition: left 0.1s linear, transform 0.3s ease;
-  }
-  .mcBook .bookClosed{width:100%;height:100%;display:block;}
-  .mcBook .bookOpen{width:65px;height:50px;display:none;position:absolute;bottom:-5px;left:-15px;}
-  .mcBook.fallen .bookClosed{display:none;}
-  .mcBook.fallen .bookOpen{display:block;}
+  #alertMsg { position: absolute; top: 8px; left: 0; right: 0; text-align: center; font-family: 'Cinzel', serif; color: #ffb347; font-weight: 800; font-size: 1.1rem; opacity: 0; transition: opacity .3s; z-index: 5; }
+  #alertMsg.show { opacity: 1; }
 
-  #dragonSceneContainer{position:absolute;bottom:0;left:0;right:0;height:240px;display:flex;justify-content:center;align-items:flex-end;}
+  #meterBar { width: 100%; height: 18px; border-radius: 999px; background: rgba(0,0,0,.3); overflow: hidden; margin-top: 10px; border: 1px solid rgba(255,255,255,0.1); }
+  #meterFill { height: 100%; width: 0%; background: linear-gradient(90deg,#4fc3a1,#ffd166,#ff6b6b); transition: width .08s ease-out; }
 
-  .zzzText{
-    position:absolute;top:40px;right:140px;font-family:'Cinzel', serif;font-weight:800;
-    font-size:1.4rem;color:#c9a4ff;opacity:0;animation:zzzFloat 3s infinite ease-in-out;
-  }
-  @keyframes zzzFloat{
-    0%{opacity:0;transform:translate(0,0) scale(0.7);}
-    50%{opacity:0.8;}
-    100%{opacity:0;transform:translate(-15px,-30px) scale(1.2);}
-  }
-
-  #alertMsg{position:absolute;top:8px;left:0;right:0;text-align:center;font-family:'Cinzel', serif;color:#ffb347;font-weight:800;font-size:1.1rem;opacity:0;transition:opacity .3s;z-index:5;}
-  #alertMsg.show{opacity:1;}
-
-  #meterBar{width:100%;height:18px;border-radius:999px;background:rgba(0,0,0,.3);overflow:hidden;margin-top:10px;border:1px solid rgba(255,255,255,0.1);}
-  #meterFill{height:100%;width:0%;background:linear-gradient(90deg,#4fc3a1,#ffd166,#ff6b6b);transition:width .08s ease-out;}
-
-  #starRow{position:absolute;top:10px;left:14px;font-size:1.1rem;font-weight:800;}
-  .controlsRow{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin-top:8px;}
-  small.hint{display:block;text-align:center;opacity:.9;margin-top:6px;font-size:.85rem;font-weight:600;}
-  
-  #errorBox{
-    display:none;
-    background:#ffdddd;
-    color:#b71c1c;
-    border:2px solid #f44336;
-    border-radius:12px;
-    padding:10px 14px;
-    margin-top:10px;
-    font-size:.85rem;
-    text-align:center;
-  }
-
-  footer{text-align:center;opacity:.6;font-size:.75rem;margin-top:20px;}
+  #starRow { position: absolute; top: 10px; left: 14px; font-size: 1.1rem; font-weight: 800; }
+  .controlsRow { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; margin-top: 8px; }
+  small.hint { display: block; text-align: center; opacity: .9; margin-top: 6px; font-size: .85rem; font-weight: 600; }
+  #errorBox { display: none; background: #ffdddd; color: #b71c1c; border: 2px solid #f44336; border-radius: 12px; padding: 10px 14px; margin-top: 10px; font-size: .85rem; text-align: center; }
+  footer { text-align: center; opacity: .6; font-size: .75rem; margin-top: 20px; }
 </style>
 </head>
 <body data-theme="young">
@@ -308,7 +289,6 @@
               </g>
 
               <path id="momMouthClosed" d="M 172 75 Q 160 78 150 72" stroke="#2a103c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-
               <g id="momMouthOpen" style="display:none;">
                 <path d="M 165 65 Q 185 68 180 82 Q 160 82 165 65 Z" fill="#4a0000" stroke="#2a103c" stroke-width="2"/>
                 <polygon points="170,66 173,72 176,66" fill="#fff"/>
@@ -316,14 +296,12 @@
               </g>
             </g>
 
-            <!-- Smoke FX -->
+            <!-- Smoke & Fire FX -->
             <g id="smokeFX" style="display:none;">
               <circle cx="180" cy="62" r="5" fill="#aaa" opacity="0.6"/>
               <circle cx="192" cy="55" r="8" fill="#ccc" opacity="0.5"/>
               <circle cx="205" cy="45" r="12" fill="#eee" opacity="0.3"/>
             </g>
-
-            <!-- Fire FX -->
             <g id="fireFX" style="display:none;">
               <path d="M 178 72 Q 210 60 250 55 Q 220 80 180 80 Z" fill="#ff4500"/>
               <path d="M 178 73 Q 205 65 235 62 Q 210 77 180 78 Z" fill="#ffae00"/>
@@ -341,11 +319,9 @@
               <polygon points="8,5 5,0 10,3" fill="#ffd166"/>
 
               <path id="babyEyeClosed" d="M 8 12 Q 12 15 15 12" stroke="#ffd166" stroke-width="2" stroke-linecap="round" fill="none"/>
-              
               <g id="babyCryingFace" style="display:none;">
                 <path d="M 7 10 Q 11 7 15 10" stroke="#ffd166" stroke-width="2" fill="none"/>
                 <circle cx="10" cy="16" r="4" fill="#3a0000"/>
-                <!-- Tear Drop -->
                 <path d="M 5 12 C 3 15 3 18 5 18 C 7 18 7 15 5 12 Z" fill="#4cc9f0"/>
               </g>
             </g>
@@ -357,13 +333,12 @@
 
     <div class="controlsRow">
       <button id="micBtn" type="button">🎙️ Start Listening</button>
-      <button id="testNoiseBtn" class="ghost" type="button">⚡ Δοκιμή (Test Graphics)</button>
+      <button id="testNoiseBtn" class="ghost" type="button">⚡ Test Graphics &amp; Sound</button>
       <button id="resetSceneBtn" class="ghost" type="button">🔄 Reset Scene</button>
     </div>
     
     <div id="meterBar"><div id="meterFill"></div></div>
-    <small class="hint" id="micHint">Πατήστε "Start Listening" για να ενεργοποιήσετε το μικρόφωνο.</small>
-
+    <small class="hint" id="micHint">Click "Start Listening" to request microphone access.</small>
     <div id="errorBox"></div>
   </div>
 
@@ -380,10 +355,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const resetBtn = document.getElementById('resetSceneBtn');
   const errorBox = document.getElementById('errorBox');
 
-  let currentTheme='young';
+  let currentTheme = 'young';
   
   function setTheme(name){
-    currentTheme=name;
+    currentTheme = name;
     body.setAttribute('data-theme', name);
     if(name === 'young'){
       themeYoungBtn.classList.add('selected');
@@ -403,108 +378,101 @@ window.addEventListener('DOMContentLoaded', () => {
   themeYoungBtn.addEventListener('click', () => setTheme('young'));
   themePreteenBtn.addEventListener('click', () => setTheme('preteen'));
 
-  // ---------- TIMER LOGIC ----------
-  let timerInterval = null;
-  let remainingSeconds = 0;
-  let isPaused = false;
-
-  const timerDisplay = document.getElementById('timerDisplay');
-  const timerLabel = document.getElementById('timerLabel');
-  const presetButtons = document.getElementById('presetButtons');
-  const runControls = document.getElementById('runControls');
-  const pauseBtn = document.getElementById('pauseBtn');
-  const stopBtn = document.getElementById('stopBtn');
-  const addOneBtn = document.getElementById('addOne');
-  const addTwoBtn = document.getElementById('addTwo');
-
-  function updateTimerDisplay(){
-    const mins = Math.floor(remainingSeconds / 60);
-    const secs = remainingSeconds % 60;
-    timerDisplay.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+  // PURE WEB AUDIO SYNTHESIZER (NO EXTERNAL FILES - ZERO CORS/BLOCKING ISSUES)
+  let synthCtx = null;
+  function getAudioCtx() {
+    if (!synthCtx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      synthCtx = new AudioCtx();
+    }
+    if (synthCtx.state === 'suspended') synthCtx.resume();
+    return synthCtx;
   }
 
-  function startTimer(minutes){
-    clearInterval(timerInterval);
-    remainingSeconds = minutes * 60;
-    isPaused = false;
-    pauseBtn.textContent = 'Pause';
-    updateTimerDisplay();
-    
-    presetButtons.style.display = 'none';
-    runControls.style.display = 'flex';
-    timerLabel.textContent = 'Timer running...';
+  let lastShh = 0, lastHuff = 0, lastRoar = 0;
 
-    timerInterval = setInterval(() => {
-      if(!isPaused){
-        remainingSeconds--;
-        updateTimerDisplay();
-        if(remainingSeconds <= 0){
-          clearInterval(timerInterval);
-          timerLabel.textContent = '🎉 Time is up!';
-          playChime();
-          resetTimerUI();
-        }
-      }
-    }, 1000);
+  function playShh() {
+    const now = Date.now();
+    if(now - lastShh < 4000) return;
+    lastShh = now;
+    const ctx = getAudioCtx();
+    const bufferSize = ctx.sampleRate * 1.5;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 2200;
+    filter.Q.value = 1.2;
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.01, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime + 0.3);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.4);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    noise.start();
   }
 
-  function resetTimerUI(){
-    presetButtons.style.display = 'flex';
-    runControls.style.display = 'none';
+  function playHuff() {
+    const now = Date.now();
+    if(now - lastHuff < 4000) return;
+    lastHuff = now;
+    const ctx = getAudioCtx();
+    const bufferSize = ctx.sampleRate * 1.2;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 400;
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.01, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.2);
+    gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 1.1);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    noise.start();
   }
 
-  presetButtons.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const min = parseInt(btn.getAttribute('data-min'));
-      startTimer(min);
-    });
-  });
+  function playRoarAndCry() {
+    const now = Date.now();
+    if(now - lastRoar < 7000) return;
+    lastRoar = now;
+    const ctx = getAudioCtx();
 
-  addOneBtn.onclick = () => { remainingSeconds += 60; updateTimerDisplay(); };
-  addTwoBtn.onclick = () => { remainingSeconds += 120; updateTimerDisplay(); };
+    // DRAGON ROAR
+    const osc = ctx.createOscillator();
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    const gain = ctx.createGain();
 
-  pauseBtn.onclick = () => {
-    isPaused = !isPaused;
-    pauseBtn.textContent = isPaused ? 'Resume' : 'Pause';
-    timerLabel.textContent = isPaused ? 'Timer paused' : 'Timer running...';
-  };
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(110, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(55, ctx.currentTime + 1.8);
 
-  stopBtn.onclick = () => {
-    clearInterval(timerInterval);
-    remainingSeconds = 0;
-    updateTimerDisplay();
-    timerLabel.textContent = 'Pick a timer to begin';
-    resetTimerUI();
-  };
+    lfo.frequency.value = 25;
+    lfoGain.gain.value = 30;
+    lfo.connect(osc.frequency);
 
-  // ---------- BOOKS SETUP ----------
-  const booksContainer = document.getElementById('booksContainer');
-  const bookColors = [
-    {cover:'#ee5253', spine:'#c8d6e5'}, 
-    {cover:'#0abde3', spine:'#ffffff'}, 
-    {cover:'#10ac84', spine:'#feca57'}, 
-    {cover:'#5f27cd', spine:'#ff9ff3'}, 
-    {cover:'#ff9f43', spine:'#ffffff'},
-    {cover:'#54a0ff', spine:'#feca57'}
-  ];
-  let books = [];
-  const TOTAL_BOOKS = 6;
+    gain.gain.setValueAtTime(0.01, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.6, ctx.currentTime + 0.3);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 2.0);
 
-  function buildBooks(){
-    booksContainer.innerHTML='';
-    books=[];
-    const startX = 25;
-    const gap = 42;
-    for(let i=0; i<TOTAL_BOOKS; i++){
-      const c = bookColors[i % bookColors.length];
-      const b = document.createElement('div');
-      b.className = 'mcBook';
-      const baseLeft = startX + (i * gap);
-      b.style.left = baseLeft + 'px';
-      
-      b.innerHTML = `
-        <svg class="bookClosed" viewBox="0 0 30 65">
-          <rect x="0" y="0" width="26" height="65" fill="${c.cover}" rx="2"/>
-          <rect x="26" y="0" width="4" height="65" fill="rgba(0,0,0,0.25)"/>
-          <rect x="3" y="2" width="20" height="4" fill="${c.spine}"/>
-          <rect x="3" y="59" width="20" height="4" fill="$
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(); lfo.start();
+    osc.stop(ctx.cur

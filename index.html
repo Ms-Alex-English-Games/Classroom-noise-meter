@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -159,7 +159,21 @@
 
   #starRow{position:absolute;top:10px;left:14px;font-size:1.1rem;font-weight:800;}
   .controlsRow{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin-top:8px;}
-  small.hint{display:block;text-align:center;opacity:.85;margin-top:6px;font-size:.82rem;}
+  small.hint{display:block;text-align:center;opacity:.9;margin-top:6px;font-size:.85rem;font-weight:600;}
+  
+  /* Error / Warning Alert Box */
+  #errorBox{
+    display:none;
+    background:#ffdddd;
+    color:#b71c1c;
+    border:2px solid #f44336;
+    border-radius:12px;
+    padding:10px 14px;
+    margin-top:10px;
+    font-size:.85rem;
+    text-align:center;
+  }
+
   footer{text-align:center;opacity:.6;font-size:.75rem;margin-top:20px;}
 </style>
 </head>
@@ -289,13 +303,17 @@
 
     <div class="controlsRow">
       <button id="micBtn">🎙️ Start Listening</button>
+      <button id="testNoiseBtn" class="ghost">⚡ Δοκιμή Ήχου (Test)</button>
       <button id="resetSceneBtn" class="ghost">🔄 Reset Scene</button>
     </div>
+    
     <div id="meterBar"><div id="meterFill"></div></div>
-    <small class="hint" id="micHint">Press Start Listening and allow microphone access.</small>
+    <small class="hint" id="micHint">Πατήστε "Start Listening" για να δώσετε άδεια στο μικρόφωνο.</small>
+
+    <div id="errorBox"></div>
   </div>
 
-  <footer>Made for Ms Alex's classroom · Private &amp; secure (audio is processed only in your browser)</footer>
+  <footer>Made for Ms Alex's classroom · Private &amp; secure (audio processed locally)</footer>
 </div>
 
 <script>
@@ -306,6 +324,7 @@
   const paneYoung = document.getElementById('paneYoung');
   const panePreteen = document.getElementById('panePreteen');
   const resetBtn = document.getElementById('resetSceneBtn');
+  const errorBox = document.getElementById('errorBox');
 
   let currentTheme='young';
   function setTheme(name){
@@ -329,7 +348,6 @@
   function buildBooks(){
     booksWrap.innerHTML='';
     books=[];
-    const wrapWidth = booksWrap.offsetWidth || 300;
     const startX = 20;
     const gap = 26;
     for(let i=0; i<TOTAL_BOOKS; i++){
@@ -365,19 +383,16 @@
   };
 
   function updatePreteenScene(vol){
-    // vol is 0 to 100
     if(vol > 55){
       alertMsg.classList.add('show');
     } else {
       alertMsg.classList.remove('show');
     }
 
-    // Gradually open Mother Dragon Eye
     const eyeOpenness = Math.min(6, (vol / 100) * 7);
     momEye.setAttribute('ry', eyeOpenness);
     momPupil.style.opacity = eyeOpenness > 2 ? '1' : '0';
 
-    // Slide books towards right shelf edge based on volume
     const rightEdgeMax = (booksWrap.offsetWidth || 300) - 40;
     let anyFallen = false;
 
@@ -392,7 +407,6 @@
 
       let currentPos = b.baseLeft + b.currentShift;
 
-      // Check if book falls off shelf
       if(currentPos >= rightEdgeMax - (TOTAL_BOOKS - i)*8){
         b.fallen = true;
         b.el.style.transition = 'transform 0.6s cubic-bezier(.5,0,1,.5), left 0.6s linear';
@@ -406,7 +420,6 @@
       if(b.fallen) anyFallen = true;
     });
 
-    // Fire breath when books fall / high volume
     if(vol > 80 || anyFallen){
       fireWrap.style.display = 'block';
     } else {
@@ -434,17 +447,16 @@
     sunFace.classList.remove('shake');
 
     if(vol < 25){
-      // STATE 1: CALM
       volWord.textContent = 'Shhh... calm and quiet 🌿';
       sunFace.style.background = '#ffcf56';
       browL.setAttribute('d', 'M22 32 Q32 32 40 32');
       browR.setAttribute('d', 'M60 32 Q68 32 78 32');
       eyeL.setAttribute('rx', '5'); eyeL.setAttribute('ry', '6');
       eyeR.setAttribute('rx', '5'); eyeR.setAttribute('ry', '6');
-      mouth.setAttribute('d', 'M32 64 Q50 74 68 64'); // Happy smile
+      mouth.setAttribute('d', 'M32 64 Q50 74 68 64');
 
       calmStreak++;
-      if(calmStreak >= 250){ // ~5 sec quiet
+      if(calmStreak >= 250){
         stars++;
         starRow.textContent = '⭐ ' + stars;
         playChime();
@@ -452,53 +464,52 @@
       }
     } 
     else if(vol < 50){
-      // STATE 2: NOTICE / WATCHFUL
       volWord.textContent = 'Voices are rising... 🙂';
       sunFace.style.background = '#ffe066';
       browL.setAttribute('d', 'M22 28 Q32 32 40 32');
       browR.setAttribute('d', 'M60 32 Q68 32 78 28');
       eyeL.setAttribute('rx', '6'); eyeL.setAttribute('ry', '7');
       eyeR.setAttribute('rx', '6'); eyeR.setAttribute('ry', '7');
-      mouth.setAttribute('d', 'M35 66 Q50 66 65 66'); // Flat mouth
+      mouth.setAttribute('d', 'M35 66 Q50 66 65 66');
       calmStreak = 0;
     }
     else if(vol < 75){
-      // STATE 3: IRRITATED
       volWord.textContent = 'Getting too loud! 😮';
       sunFace.style.background = '#ff9248';
-      browL.setAttribute('d', 'M22 36 Q32 32 40 26'); // Frown brows
+      browL.setAttribute('d', 'M22 36 Q32 32 40 26');
       browR.setAttribute('d', 'M60 26 Q68 32 78 36');
       eyeL.setAttribute('rx', '4'); eyeL.setAttribute('ry', '5');
       eyeR.setAttribute('rx', '4'); eyeR.setAttribute('ry', '5');
-      mouth.setAttribute('d', 'M38 70 Q50 58 62 70'); // O-shape / worried
+      mouth.setAttribute('d', 'M38 70 Q50 58 62 70');
       calmStreak = 0;
     }
     else {
-      // STATE 4: MAD / EXTREME NOISE
       volWord.textContent = 'Whoa, way too noisy! 😲';
       sunFace.style.background = '#ff595e';
       sunFace.classList.add('shake');
       steamL.classList.add('puff');
       steamR.classList.add('puff');
-      browL.setAttribute('d', 'M20 40 L40 24'); // Angry V-brows
+      browL.setAttribute('d', 'M20 40 L40 24');
       browR.setAttribute('d', 'M60 24 L80 40');
       eyeL.setAttribute('rx', '6'); eyeL.setAttribute('ry', '3');
       eyeR.setAttribute('rx', '6'); eyeR.setAttribute('ry', '3');
-      mouth.setAttribute('d', 'M32 72 Q50 52 68 72 Z'); // Open shouting mouth
+      mouth.setAttribute('d', 'M32 72 Q50 52 68 72 Z');
       calmStreak = 0;
     }
   }
 
-  // ---------- AUDIO SOUND EFFECTS (CHIME ONLY) ----------
   function playChime(){
     try{
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       const ctx = new AudioCtx();
       if(ctx.state === 'suspended') ctx.resume();
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      const notes = [523.25, 659.25, 783.99, 1046.50];
       notes.forEach((freq, i) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.1
+        gain.gain.setValueAtTime(0.1, ctx.currentTime + i*0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i*0.08 + 0.4);
+        osc.connect(gain);
+        

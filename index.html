@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ms Alex's Classroom Corner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Cinzel:wght@500;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --font-ui: 'Quicksand', sans-serif;
+    --shelf: #8a5a34;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:var(--font-ui);
+    background:var(--bg);
+    color:var(--text);
+    min-height:100%;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    transition:background .5s ease,color .5s ease;
+    overflow-x:hidden;
+  }
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+
+  [data-theme="young"]{
+    --bg: linear-gradient(180deg,#cdeffd,#fff6d6);
+    --panel: #ffffffcc;
+    --text:#2c3e50;
+    --accent:#ff8fab;
+    --accent2:#4fc3a1;
+    --btn:#ffd166;
+    --btnText:#5b3a00;
+    --title-font:'Baloo 2', sans-serif;
+    --radius:26px;
+  }
+  [data-theme="preteen"]{
+    --bg: radial-gradient(circle at 50% 0%, #2c1a4d, #0d0a1f 70%);
+    --panel:#1e1440dd;
+    --text:#efe6ff;
+    --accent:#c9a4ff;
+    --accent2:#ffb347;
+    --btn:#5b3fa3;
+    --btnText:#f4e8ff;
+    --title-font:'Cinzel', serif;
+    --radius:12px;
+  }
+  body{background:var(--bg);}
+
+  #app{max-width:760px;margin:0 auto;padding:18px 16px 40px;}
+  h1{
+    font-family:var(--title-font);
+    text-align:center;
+    font-size:clamp(1.3rem,4vw,2rem);
+    margin:6px 0 4px;
+  }
+  .sub{text-align:center;opacity:.75;font-size:.85rem;margin-bottom:14px;}
+
+  .row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:12px 0;}
+  .card{
+    background:var(--panel);
+    border-radius:var(--radius);
+    padding:14px;
+    box-shadow:0 4px 18px rgba(0,0,0,.15);
+  }
+  button{
+    font-family:var(--font-ui);
+    font-weight:700;
+    border:none;
+    cursor:pointer;
+    border-radius:999px;
+    padding:10px 18px;
+    background:var(--btn);
+    color:var(--btnText);
+    font-size:.95rem;
+    transition:transform .15s ease, filter .15s ease;
+  }
+  button:hover{filter:brightness(1.08);}
+  button:active{transform:scale(.94);}
+  button.ghost{background:transparent;border:2px solid var(--accent);color:var(--text);}
+  button.selected{outline:3px solid var(--accent2);}
+  button:disabled{opacity:.4;cursor:default;}
+
+  #themeRow button{min-width:150px;}
+
+  #timerDisplay{
+    font-family:var(--title-font);
+    text-align:center;
+    font-size:clamp(2.6rem,10vw,4rem);
+    margin:4px 0;
+    letter-spacing:2px;
+  }
+  #timerLabel{text-align:center;opacity:.8;font-size:.9rem;min-height:1.2em;}
+
+  #scene{
+    position:relative;
+    width:100%;
+    height:280px;
+    border-radius:var(--radius);
+    overflow:hidden;
+    background:var(--panel);
+    margin:14px 0;
+  }
+  .scenePane{position:absolute;inset:0;display:none;align-items:center;justify-content:center;}
+  .scenePane.active{display:flex;}
+
+  /* --- Young theme scene: sun face --- */
+  #sunWrap{position:relative;width:200px;height:200px;}
+  #sunRays{position:absolute;inset:-30px;border-radius:50%;background:conic-gradient(#ffd166 0 10deg, transparent 10deg 30deg);transform-origin:center;animation:spin 18s linear infinite;opacity:.6;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  #sunFace{position:absolute;inset:0;border-radius:50%;background:#ffcf56;box-shadow:inset 0 -10px 0 rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;transition:background .25s ease;}
+  #sunFace svg{width:70%;height:70%;}
+  #volWord{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-weight:700;color:var(--text);}
+
+  /* --- Preteen theme scene --- */
+  #shelf{position:absolute;top:18px;left:0;right:0;height:14px;background:var(--shelf);box-shadow:0 4px 6px rgba(0,0,0,.4);}
+  .book{position:absolute;top:-46px;width:26px;height:46px;border-radius:3px 3px 0 0;box-shadow:1px 0 0 rgba(0,0,0,.2) inset;transition:transform .12s ease;}
+  #booksWrap{position:absolute;top:32px;right:26px;width:180px;height:60px;}
+  #dragonWrap{position:absolute;bottom:14px;left:0;right:0;display:flex;justify-content:center;}
+  #dragonWrap svg{width:260px;max-width:80%;}
+  #alertMsg{position:absolute;top:8px;left:0;right:0;text-align:center;font-family:var(--title-font);color:var(--accent2);font-weight:700;opacity:0;transition:opacity .3s ease;}
+  #alertMsg.show{opacity:1;}
+  #fallenNote{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:.85rem;opacity:0;transition:opacity .3s;}
+  #fallenNote.show{opacity:1;}
+
+  #meterBar{width:100%;height:16px;border-radius:999px;background:rgba(0,0,0,.12);overflow:hidden;margin-top:8px;}
+  #meterFill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .08s linear;}
+
+  #embedBanner{display:none;background:#fff3cd;color:#5b3a00;border-radius:14px;padding:10px 14px;margin:0 0 12px;font-size:.85rem;text-align:center;}
+
+  #starRow{position:absolute;top:10px;left:0;right:0;text-align:center;font-size:1.1rem;font-weight:700;}
+  .breath{position:absolute;border-radius:50%;background:radial-gradient(circle,#ffb347cc,transparent 70%);opacity:0;pointer-events:none;}
+  @keyframes puff{0%{opacity:.9;transform:translate(0,0) scale(.4);}100%{opacity:0;transform:translate(-40px,-18px) scale(1.6);}}
+  .breath.go{animation:puff 1.1s ease-out forwards;}
+
+  .controlsRow{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin-top:10px;}
+  small.hint{display:block;text-align:center;opacity:.7;margin-top:6px;font-size:.78rem;}
+  footer{text-align:center;opacity:.55;font-size:.75rem;margin-top:26px;}
+</style>
+</head>
+<body data-theme="young">
+<div id="app">
+  <h1>🎧 Ms Alex's Classroom Corner</h1>
+  <div class="sub">Sound &amp; time management for happy classrooms</div>
+  <div id="embedBanner">
+    🎙️ <strong>Note:</strong> Embedded preview frames block microphone access. To use sound detection, please open or run this file standalone directly via standard HTTP/HTTPS or your web browser.
+  </div>
+
+  <div class="card" id="themeRow">
+    <div class="row" style="margin:0;">
+      <button id="themeYoung" class="selected">🌤️ Little Learners</button>
+      <button id="themePreteen">🐲 Mythical Kingdom</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div id="timerDisplay">00:00</div>
+    <div id="timerLabel">Pick a timer to begin</div>
+    <div class="row">
+      <button data-min="1">1 min</button>
+      <button data-min="4">4 min</button>
+      <button data-min="8">8 min</button>
+      <button data-min="15">15 min</button>
+    </div>
+    <div class="controlsRow" id="runControls" style="display:none;">
+      <button id="addOne">+1 min</button>
+      <button id="addTwo">+2 min</button>
+      <button id="pauseBtn">Pause</button>
+      <button id="stopBtn" class="ghost">Stop</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div id="scene">
+      <!-- Young scene -->
+      <div class="scenePane active" id="paneYoung">
+        <div id="starRow">⭐ 0</div>
+        <div id="sunWrap">
+          <div id="sunRays"></div>
+          <div id="sunFace">
+            <svg id="faceSvg" viewBox="0 0 100 100">
+              <circle id="eyeL" cx="32" cy="42" r="6" fill="#2c3e50"/>
+              <circle id="eyeR" cx="68" cy="42" r="6" fill="#2c3e50"/>
+              <path id="mouthPath" d="M30 65 Q50 65 70 65" stroke="#2c3e50" stroke-width="5" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div id="volWord">Shhh... nice and calm 🌿</div>
+      </div>
+      <!-- Preteen scene -->
+      <div class="scenePane" id="panePreteen">
+        <div id="alertMsg">The books are slipping!!</div>
+        <div id="shelf"></div>
+        <div id="booksWrap"></div>
+        <div id="dragonWrap">
+          <div class="breath" id="breathPuff" style="width:30px;height:30px;left:calc(50% - 108px);bottom:44px;"></div>
+          <svg viewBox="0 0 300 140">
+            <ellipse cx="150" cy="100" rx="120" ry="34" fill="#4b2e83"/>
+            <ellipse cx="90" cy="70" rx="46" ry="38" fill="#5c3aa0"/>
+            <path d="M50 55 L35 30 L60 45 Z" fill="#5c3aa0"/>
+            <path d="M75 45 L65 20 L88 40 Z" fill="#5c3aa0"/>
+            <circle id="dragonEyeL" cx="70" cy="65" r="0" fill="#ffd166"/>
+            <ellipse cx="210" cy="95" rx="26" ry="20" fill="#8a63d1"/>
+            <path d="M195 85 L188 68 L205 80 Z" fill="#8a63d1"/>
+            <text id="zzz" x="235" y="60" font-size="20" fill="#efe6ff" font-family="Cinzel, serif">Zzz</text>
+          </svg>
+        </div>
+        <div id="fallenNote">Tap the reset button below to tidy up</div>
+      </div>
+    </div>
+
+    <div class="controlsRow">
+      <button id="micBtn">🎙️ Start Listening</button>
+      <button id="resetSceneBtn" class="ghost">🔄 New Round</button>
+    </div>
+    <div id="meterBar"><div id="meterFill"></div></div>
+    <small class="hint" id="micHint">Grant microphone access so the room's noise level can drive the scene.</small>
+  </div>
+
+  <footer>Made for Ms Alex's classroom · works fully in your browser, no audio is recorded or sent anywhere.</footer>
+</div>
+
+<script>
+(function(){
+  const body = document.body;
+  const themeYoungBtn = document.getElementById('themeYoung');
+  const themePreteenBtn = document.getElementById('themePreteen');
+  const paneYoung = document.getElementById('paneYoung');
+  const panePreteen = document.getElementById('panePreteen');
+
+  if (window.self !== window.top) {
+    document.getElementById('embedBanner').style.display = 'block';
+  }
+
+  let currentTheme='young';
+  const resetBtn = document.getElementById('resetSceneBtn');
+  function setTheme(name){
+    currentTheme=name;
+    body.setAttribute('data-theme', name);
+    themeYoungBtn.classList.toggle('selected', name==='young');
+    themePreteenBtn.classList.toggle('selected', name==='preteen');
+    paneYoung.classList.toggle('active', name==='young');
+    panePreteen.classList.toggle('active', name==='preteen');
+    resetBtn.textContent = name==='young' ? '🔄 New Round' : '📚 Tidy the shelf';
+    try{ localStorage.setItem('msalex_theme', name); }catch(e){}
+  }
+  themeYoungBtn.onclick = ()=>setTheme('young');
+  themePreteenBtn.onclick = ()=>setTheme('preteen');
+  try{
+    const saved = localStorage.getItem('msalex_theme');
+    if(saved==='preteen') setTheme('preteen');
+  }catch(e){}
+
+  // ---------- Books setup ----------
+  const booksWrap = document.getElementById('booksWrap');
+  const bookColors = ['#c9a4ff','#ffb347','#7fd8be','#ff8fab','#9fb4ff'];
+  let books = [];
+  function buildBooks(){
+    booksWrap.innerHTML='';
+    books=[];
+    const n=5;
+    for(let i=0;i<n;i++){
+      const b=document.createElement('div');
+      b.className='book';
+      b.style.left=(i*30)+'px';
+      b.style.background=bookColors[i%bookColors.length];
+      b.style.transform='rotate(0deg) translateY(0px)';
+      booksWrap.appendChild(b);
+      books.push({el:b, baseRot:(i-2)*2});
+    }
+  }
+  buildBooks();
+
+  const alertMsg = document.getElementById('alertMsg');
+  const fallenNote = document.getElementById('fallenNote');
+  const dragonEye = document.getElementById('dragonEyeL');
+  const zzz = document.getElementById('zzz');
+  const breathPuff = document.getElementById('breathPuff');
+  let fallen=false;
+  let breathTimer=0;
+
+  resetBtn.onclick = ()=>{
+    if(currentTheme==='preteen'){
+      fallen=false;
+      buildBooks();
+      alertMsg.classList.remove('show');
+      fallenNote.classList.remove('show');
+      dragonEye.setAttribute('r','0');
+      zzz.style.opacity='1';
+    } else {
+      stars=0;
+      starRow.textContent='⭐ 0';
+      calmStreak=0;
+    }
+    noiseScore=0;
+  };
+
+  function updatePreteenScene(vol, score){
+    if(fallen) return;
+    if(score > 70){
+      alertMsg.classList.add('show');
+    } else {
+      alertMsg.classList.remove('show');
+    }
+    books.forEach((b,i)=>{
+      const wiggle = (vol*14) * (i%2===0?1:-1);
+      const drop = Math.min(score*0.5, 40);
+      b.el.style.transform = `rotate(${b.baseRot + wiggle}deg) translateY(${drop}px)`;
+    });
+    if(score > 100){
+      fallen = true;
+      books.forEach((b,i)=>{
+        b.el.style.transition='transform .8s cubic-bezier(.5,0,1,.5)';
+        b.el.style.transform = `rotate(${(i-2)*60}deg) translate(${(i-2)*20}px, 220px)`;
+      });
+      fallenNote.classList.add('show');
+      alertMsg.classList.remove('show');
+    }
+    if(score > 55){
+      dragonEye.setAttribute('r', Math.min((score-55)/2, 7));
+      zzz.style.opacity = Math.max(0, 1-(score-55)/40);
+    } else {
+      dragonEye.setAttribute('r','0');
+      zzz.style.opacity='1';
+    }
+    if(score > 90){
+      breathTimer += 1;
+      if(breathTimer > 40){
+        breathTimer = 0;
+        breathPuff.classList.remove('go');
+        void breathPuff.offsetWidth;
+        breathPuff.classList.add('go');
+      }
+    } else {
+      breathTimer = 0;
+    }
+  }
+
+  // ---------- Young theme scene ----------
+  const sunFace = document.getElementById('sunFace');
+  const eyeL = document.getElementById('eyeL');
+  const eyeR = document.getElementById('eyeR');
+  const mouthPath = document.getElementById('mouthPath');
+  const volWord = document.getElementById('volWord');
+  const starRow = document.getElementById('starRow');
+  let stars=0, calmStreak=0;
+  const wordsByLevel = [
+    [0,'Shhh... nice and calm 🌿','#8fd3c0'],
+    [25,'Nice working voices 🙂','#ffe08a'],
+    [55,'Getting a bit loud... 😮','#ffb347'],
+    [80,'Whoa, too noisy! 😲','#ff6b6b']
+  ];
+  function chime(){
+    try{
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      const ctx = new AudioCtx();
+      if (ctx.state === 'suspended') ctx.resume();
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.type='sine'; o.frequency.setValueAtTime(880, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime+0.15);
+      o.connect(g); g.connect(ctx.destination);
+      g.gain.setValueAtTime(0.15, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.35);
+      o.start(); o.stop(ctx.currentTime+0.36);
+    }catch(e){}
+  }
+  function updateYoungScene(vol){
+    let cur=wordsByLevel[0];
+    for(const w of wordsByLevel){ if(vol>=w[0]) cur=w; }
+    volWord.textContent=cur[1];
+    sunFace.style.background=cur[2];
+    const open = Math.min(vol/100, 1);
+    eyeL.setAttribute('ry', 6);
+    eyeR.setAttribute('ry', 6);
+    const mouthY = 65 + open*10;
+    mouthPath.setAttribute('d', `M30 65 Q50 ${mouthY+ open*25} 70 65`);
+
+    if(vol < 25){
+      calmStreak++;
+      if(calmStreak===300){
+        stars++;
+        starRow.textContent='⭐ '+stars;
+        chime();
+        calmStreak=0;
+      }
+    } else {
+      calmStreak=0;
+    }
+  }
+
+  // ---------- Microphone / volume analysis ----------
+  const micBtn = document.getElementById('micBtn');
+  const micHint = document.getElementById('micHint');
+  const meterFill = document.getElementById('meterFill');
+  let audioCtx, analyser, dataArray, rafId, stream;
+  let noiseScore = 0;
+  let listening=false;
+
+  async function startMic(){
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      micHint.textContent='Microphone access is unavailable. Ensure you are running this file via HTTPS or directly on a supported browser (Chrome, Safari, Edge).';
+      return;
+    }
+    micHint.textContent='Requesting microphone access...';
+    try{
+      stream = await navigator.mediaDevices.getUserMedia({audio:true});
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioCtx();
+      if (audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+      }
+      const source = audioCtx.createMediaStreamSource(stream);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize=512;
+      dataArray = new Uint8Array(analyser.frequencyBinCount);
+      source.connect(analyser);
+      listening=true;
+      micBtn.textContent='🔇 Stop Listening';
+      micHint.textContent='Listening... noise level is driving the scene.';
+      loop();
+    }catch(e){
+      let msg='Microphone access was denied or restricted.';
+      if(e && e.name==='NotAllowedError') msg='Microphone permission denied. Click the browser lock icon near the URL address bar to enable mic access.';
+      else if(e && e.name==='NotFoundError') msg='No audio input hardware detected.';
+      micHint.textContent=msg;
+    }
+  }
+  function stopMic(){
+    listening=false;
+    if(rafId) cancelAnimationFrame(rafId);
+    if(stream) stream.getTracks().forEach(t=>t.stop());
+    if(audioCtx) audioCtx.close();
+    micBtn.textContent='🎙️ Start Listening';
+    micHint.textContent='Grant microphone access so the room\'s noise level can drive the scene.';
+    meterFill.style.width='0%';
+  }
+  micBtn.onclick=()=>{ listening?stopMic():startMic(); };
+
+  function loop(){
+    if(!listening) return;
+    analyser.getByteTimeDomainData(dataArray);
+    let sum=0;
+    for(let i=0;i<dataArray.length;i++){
+      const v=(dataArray[i]-128)/128;
+      sum+=v*v;
+    }
+    const rms=Math.sqrt(sum/dataArray.length);
+    const vol=Math.min(100, rms*260);
+    meterFill.style.width=vol+'%';
+
+    if(vol>35){ noiseScore += (vol-35)*0.06; }
+    else { noiseScore = Math.max(0, noiseScore-1.2); }
+    noiseScore = Math.min(noiseScore,130);
+
+    updateYoungScene(vol);
+    updatePreteenScene(vol/100, noiseScore);
+
+    rafId=requestAnimationFrame(loop);
+  }
+
+  // ---------- Timer ----------
+  const timerDisplay=document.getElementById('timerDisplay');
+  const timerLabel=document.getElementById('timerLabel');
+  const runControls=document.getElementById('runControls');
+  let remaining=0, timerInt=null, paused=false;
+
+  function fmt(s){
+    const m=Math.floor(s/60), sec=s%60;
+    return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+  }
+  function render(){ timerDisplay.textContent=fmt(remaining); }
+
+  function beep(){
+    try{
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      const ctx = new AudioCtx();
+      if (ctx.state === 'suspended') ctx.resume();
+      [0,0.25,0.5].forEach((t,i)=>{
+        const o=ctx.createOscillator(), g=ctx.createGain();
+        o.type='sine'; o.frequency.value= i===2?880:660;
+        o.connect(g); g.connect(ctx.destination);
+        g.gain.setValueAtTime(0.2, ctx.currentTime+t);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+t+0.25);
+        o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+0.26);
+      });
+    }catch(e){}
+  }
+
+  function startTimer(min){
+    clearInterval(timerInt);
+    remaining=min*60;
+    paused=false;
+    render();
+    timerLabel.textContent='Running...';
+    runControls.style.display='flex';
+    document.getElementById('pauseBtn').textContent='Pause';
+    timerInt=setInterval(()=>{
+      if(paused) return;
+      remaining--;
+      if(remaining<=0){
+        clearInterval(timerInt);
+        timerLabel.textContent="Time's up! ⏰";
+        beep();
+        runControls.style.display='none';
+      }
+      render();
+    },1000);
+  }
+  document.querySelectorAll('[data-min]').forEach(b=>{
+    b.onclick=()=>startTimer(parseInt(b.dataset.min,10));
+  });
+  document.getElementById('addOne').onclick=()=>{ remaining+=60; render(); };
+  document.getElementById('addTwo').onclick=()=>{ remaining+=120; render(); };
+  document.getElementById('pauseBtn').onclick=(e)=>{
+    paused=!paused;
+    e.target.textContent = paused?'Resume':'Pause';
+    timerLabel.textContent = paused?'Paused':'Running...';
+  };
+  document.getElementById('stopBtn').onclick=()=>{
+    clearInterval(timerInt);
+    remaining=0; render();
+    timerLabel.textContent='Pick a timer to begin';
+    runControls.style.display='none';
+  };
+})();
+</script>
+</body>
+</html>

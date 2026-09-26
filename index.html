@@ -133,11 +133,6 @@
   #sunFace svg { width: 80%; height: 80%; }
   #volWord { position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; font-weight: 800; font-size: 1rem; color: var(--text); }
   
-  .steam { position: absolute; top: -10px; width: 12px; height: 12px; background: rgba(255,255,255,0.7); border-radius: 50%; opacity: 0; }
-  .steam.left { left: 40px; } .steam.right { right: 40px; }
-  .steam.puff { animation: steamUp 0.8s ease-out infinite; }
-  @keyframes steamUp { 0%{opacity:0.8;transform:translateY(0) scale(0.8);} 100%{opacity:0;transform:translateY(-30px) scale(1.8);} }
-
   /* PRETEEN THEME */
   #shelf3D {
     position: absolute; top: 80px; left: 20px; right: 20px; height: 16px;
@@ -216,8 +211,6 @@
         <div id="starRow">⭐ 0</div>
         <div id="sunWrap">
           <div id="sunRays"></div>
-          <div class="steam left" id="steamL"></div>
-          <div class="steam right" id="steamR"></div>
           <div id="sunFace">
             <svg id="sunSvg" viewBox="0 0 100 100">
               <path id="browL" d="M22 32 Q32 32 40 32" stroke="#2c3e50" stroke-width="3.5" stroke-linecap="round" fill="none"/>
@@ -378,7 +371,6 @@ window.addEventListener('DOMContentLoaded', () => {
   themeYoungBtn.addEventListener('click', () => setTheme('young'));
   themePreteenBtn.addEventListener('click', () => setTheme('preteen'));
 
-  // PURE WEB AUDIO SYNTHESIZER (NO EXTERNAL FILES - ZERO CORS/BLOCKING ISSUES)
   let synthCtx = null;
   function getAudioCtx() {
     if (!synthCtx) {
@@ -396,7 +388,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if(now - lastShh < 4000) return;
     lastShh = now;
     const ctx = getAudioCtx();
-    const bufferSize = ctx.sampleRate * 1.5;
+    const bufferSize = ctx.sampleRate * 1.2;
     const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
     const data = buffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
@@ -411,8 +403,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.01, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime + 0.3);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.4);
+    gain.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + 0.2);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.1);
 
     noise.connect(filter);
     filter.connect(gain);
@@ -439,8 +431,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.01, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.2);
-    gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 1.1);
+    gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 0.2);
+    gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 1.0);
 
     noise.connect(filter);
     filter.connect(gain);
@@ -450,11 +442,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function playRoarAndCry() {
     const now = Date.now();
-    if(now - lastRoar < 7000) return;
+    if(now - lastRoar < 6000) return;
     lastRoar = now;
     const ctx = getAudioCtx();
 
-    // DRAGON ROAR
     const osc = ctx.createOscillator();
     const lfo = ctx.createOscillator();
     const lfoGain = ctx.createGain();
@@ -462,17 +453,35 @@ window.addEventListener('DOMContentLoaded', () => {
 
     osc.type = 'sawtooth';
     osc.frequency.setValueAtTime(110, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(55, ctx.currentTime + 1.8);
+    osc.frequency.exponentialRampToValueAtTime(55, ctx.currentTime + 1.6);
 
     lfo.frequency.value = 25;
     lfoGain.gain.value = 30;
     lfo.connect(osc.frequency);
 
     gain.gain.setValueAtTime(0.01, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.6, ctx.currentTime + 0.3);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 2.0);
+    gain.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.3);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.8);
 
     osc.connect(gain);
     gain.connect(ctx.destination);
     osc.start(); lfo.start();
-    osc.stop(ctx.cur
+    osc.stop(ctx.currentTime + 1.8); lfo.stop(ctx.currentTime + 1.8);
+  }
+
+  function playChime() {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.0);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 1.0);
+  }
+
+  // TIMER LOGIC
+  let timerInterval = null, remainingSeconds = 0, isPaused = false;
+  cons
